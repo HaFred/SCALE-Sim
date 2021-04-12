@@ -1,4 +1,4 @@
-# **S**ystolic **C**NN **A**cce**LE**rator Simulator (SCALE Sim)
+# **S**ystolic **C**NN **A**cce**LE**rator Simulator (SCALE-Sim)
 
 SCALE sim is a CNN accelerator simulator, that provides cycle-accurate timing,
 power/energy, memory bandwidth and trace results for a

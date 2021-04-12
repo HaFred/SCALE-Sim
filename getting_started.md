@@ -48,3 +48,6 @@ In addition cycle accurate SRAM/DRAM access logs are also dumped and could be ac
 
 ## Detailed Documentation
 For detailed insights on using SCALE-Sim, you can refer to this [paper](https://arxiv.org/abs/1811.02883)
+
+## Repo Managemetn
+For the repo duplicating and ssh pushing after the annoying 2FA is compulsive, refer the the [duplicating notes](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/duplicating-a-repository) and [ssh guide](https://stackoverflow.com/questions/29297154/github-invalid-username-or-password). 
