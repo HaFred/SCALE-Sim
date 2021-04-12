@@ -6,6 +6,13 @@ specified accelerator configuration and neural network architecture.
 
 [Skip to Getting Started](getting_started.md)
 
+## Update on Apr12
+
+Run the customized SCALE Sim by
+```python scale.py -arch_config=configs/effigrad.cfg -network=topologies/conv_nets/resnet18.csv -vanilla_scale_sim=False```
+
+The `SramSz` in `.cfg` and dram r/w function, is all in word (assumed as byte/word if not addressed specifically).
+
 ## Motivation
 
 SCALE sim enables research into CNN accelerator architecture and is also suitable for system-level studies. 
@@ -146,6 +153,8 @@ If you find this tool useful for your research, please use the following bibtex 
 Please send a [pull request](https://help.github.com/articles/creating-a-pull-request/).
 
 ## Authors
+
+[HaFred](https://github.com/HaFred), Hong Kong Univ. of Sci. & Tech.
 
 [Ananda Samajdar](https://anands09.github.io), Georgia Institute of Technology
 
