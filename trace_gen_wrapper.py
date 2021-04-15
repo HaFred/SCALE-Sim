@@ -117,7 +117,8 @@ def gen_all_traces_dramsim_format(
 
         data_flow='os',
 
-        word_size_bytes=1,
+        # word_size_bytes=1,
+        dram_read_bw=8, dram_write_bw=8, dram_read_wsb=1, dram_write_wsb=1,
         filter_sram_size=64, ifmap_sram_size=64, ofmap_sram_size=64,
 
         filt_base=1000000, ifmap_base=0, ofmap_base=2000000,
@@ -176,7 +177,8 @@ def gen_all_traces_dramsim_format(
     # print("Generating DRAM traffic")
     dramsim_format.dram_trace_read_dramsim(
         sram_sz=ifmap_sram_size,
-        word_sz_bytes=word_size_bytes,
+        word_sz_bytes=dram_read_wsb,
+        default_read_bw=dram_read_bw,
         min_addr=ifmap_base, max_addr=filt_base,
         sram_trace_file=sram_read_trace_file,
         dram_trace_file=dram_ifmap_trace_file,
@@ -184,7 +186,8 @@ def gen_all_traces_dramsim_format(
 
     dramsim_format.dram_trace_read_dramsim(
         sram_sz=filter_sram_size,
-        word_sz_bytes=word_size_bytes,
+        word_sz_bytes=dram_read_wsb,
+        default_read_bw=dram_read_bw,
         min_addr=filt_base, max_addr=ofmap_base,
         sram_trace_file=sram_read_trace_file,
         dram_trace_file=dram_filter_trace_file,
@@ -192,7 +195,8 @@ def gen_all_traces_dramsim_format(
 
     dramsim_format.dram_trace_write_dramsim(
         ofmap_sram_size=ofmap_sram_size,
-        data_width_bytes=word_size_bytes,
+        data_width_bytes=dram_write_wsb,
+        default_write_bw=dram_write_bw,
         sram_write_trace_file=sram_write_trace_file,
         dram_write_trace_file=dram_ofmap_trace_file
     )

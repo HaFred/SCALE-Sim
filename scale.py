@@ -79,6 +79,19 @@ class scale:
         ofmap_offset = config.get(arch_sec, 'OfmapOffset')
         self.ofmap_offset = int(ofmap_offset.strip())
 
+        # f: these are determined by DRAM.ini and relevant with operands precision
+        dram_read_bw = config.get(arch_sec, 'DramReadBw')
+        self.dram_read_bw = int(dram_read_bw)
+
+        dram_write_bw = config.get(arch_sec, 'DramWriteBw')
+        self.dram_write_bw = int(dram_write_bw)
+
+        dram_read_wsb = config.get(arch_sec, 'DramReadW/B') # byte per word_size
+        self.dram_read_wsb = int(dram_read_wsb)
+
+        dram_write_wsb = config.get(arch_sec, 'DramWriteW/B') # byte per word_size
+        self.dram_write_wsb = int(dram_write_wsb)
+
         ## Read network_presets
         ## For now that is just the topology csv filename
         # topology_file = config.get(net_sec, 'TopologyCsvLoc')
@@ -153,13 +166,16 @@ class scale:
         cmd = "mv *.csv " + path
         os.system(cmd)
 
-        cmd = "mkdir " + path + "/layer_wise"
+        cmd = "mkdir " + path + "/sram"
         os.system(cmd)
 
-        cmd = "mv " + path + "/*sram* " + path + "/layer_wise"
+        cmd = "mkdir " + path + "/dram"
         os.system(cmd)
 
-        cmd = "mv " + path + "/*dram* " + path + "/layer_wise"
+        cmd = "mv " + path + "/*sram* " + path + "/sram"
+        os.system(cmd)
+
+        cmd = "mv " + path + "/*dram* " + path + "/dram"
         os.system(cmd)
 
         if self.save_space == True:
@@ -191,7 +207,11 @@ class scale:
 
     # this fn generates sram as used to, but dram traces are in dramsim3 format
     def test_dram_trace_resnet18(self):
-        df_string = "Weight Stationary"
+        df_string = "Output Stationary"
+        if self.dataflow == 'ws':
+            df_string = "Weight Stationary"
+        elif self.dataflow == 'is':
+            df_string = "Input Stationary"
 
         print("====================================================")
         print("******************* SCALE SIM for ResNet18 on EffiGrad **********************")
@@ -216,7 +236,11 @@ class scale:
                                  net_name=net_name,
                                  data_flow=self.dataflow,
                                  topology_file=self.topology_file,
-                                 offset_list=offset_list
+                                 offset_list=offset_list,
+                                 dram_read_bw=self.dram_read_bw,
+                                 dram_write_bw=self.dram_write_bw,
+                                 dram_read_wsb=self.dram_read_wsb,
+                                 dram_write_wsb=self.dram_write_wsb
                                  )
         self.cleanup()
         print("************ SCALE SIM Run Complete ****************")

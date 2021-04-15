@@ -148,8 +148,13 @@ def run_net_dramsim_format(ifmap_sram_size=1,
                            data_flow='os',
                            topology_file='./topologies/yolo_v2.csv',
                            net_name='yolo_v2',
-                           offset_list=[0, 10000000, 20000000]
+                           offset_list=[0, 10000000, 20000000],
+                           dram_read_bw=8,
+                           dram_write_bw=8,
+                           dram_read_wsb=1,
+                           dram_write_wsb=1
                            ):
+    # fixme this indicates the sram_size kB unit
     ifmap_sram_size *= 1024
     filter_sram_size *= 1024
     ofmap_sram_size *= 1024
@@ -232,18 +237,22 @@ def run_net_dramsim_format(ifmap_sram_size=1,
                                              num_filt=num_filters,
                                              strides=strides,
                                              data_flow=data_flow,
-                                             word_size_bytes=1,
+                                             # word_size_bytes=1,
+                                             dram_read_bw=dram_read_bw,
+                                             dram_write_bw=dram_write_bw,
+                                             dram_read_wsb=dram_read_wsb,
+                                             dram_write_wsb=dram_write_wsb,
                                              filter_sram_size=filter_sram_size,
                                              ifmap_sram_size=ifmap_sram_size,
                                              ofmap_sram_size=ofmap_sram_size,
                                              filt_base=filter_base,
                                              ifmap_base=ifmap_base,
                                              ofmap_base=ofmap_base,
-                                             sram_read_trace_file=net_name + "_" + name + "_sram_read.csv",
-                                             sram_write_trace_file=net_name + "_" + name + "_sram_write.csv",
-                                             dram_filter_trace_file=net_name + "_" + name + "_dram_filter_read.csv",
-                                             dram_ifmap_trace_file=net_name + "_" + name + "_dram_ifmap_read.csv",
-                                             dram_ofmap_trace_file=net_name + "_" + name + "_dram_ofmap_write.csv"
+                                             sram_read_trace_file=net_name + "_sram_read_" + name + ".csv",
+                                             sram_write_trace_file=net_name + "_sram_write_" + name + ".csv",
+                                             dram_filter_trace_file=net_name + "_dram_filter_read_" + name + ".csv",
+                                             dram_ifmap_trace_file=net_name + "_dram_ifmap_read_" + name + ".csv",
+                                             dram_ofmap_trace_file=net_name + "_dram_ofmap_write_" + name + ".csv"
                                              )
 
         # bw_log += bw_str

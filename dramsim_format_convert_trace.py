@@ -1,13 +1,18 @@
 import math
 import tqdm
 from dram_trace import prune
-
+import os
+'''
+Mod on Apr13:
+    Tyring to make the dram output trace with positive clock cycle, thus a temp_offset is needed for each trace file at
+    very beginning. 
+'''
 # dramsim3 format dram_read_trace output fn
 def dram_trace_read_dramsim(
         sram_sz=512 * 1024,  # word size
         word_sz_bytes=1,
         min_addr=0, max_addr=1000000,
-        default_read_bw=4,  # this is arbitrary; f: this bw is how much word read per cycle
+        default_read_bw=4,  # default is arbitrary; f: this bw is how much word read per cycle
         sram_trace_file="sram_log.csv",
         dram_trace_file="dram_log.csv",
         verbose=False
@@ -20,6 +25,7 @@ def dram_trace_read_dramsim(
     # for the int in the set(); however the set.pop for integer ele in set, will always in a increasing order
     sram_requests = open(sram_trace_file, 'r')
     dram_traces = open(dram_trace_file, 'w')
+    offset = 0
 
     for entry in sram_requests:
         elems = entry.strip().split(',')
@@ -36,6 +42,7 @@ def dram_trace_read_dramsim(
                 # used up all the unique data in the SRAM
                 # f: highly doubt that, the original version is typo here
                 if len(sram) * word_sz_bytes > sram_sz:
+
                     # update t_fill_start
                     if t_fill_start == -1:
                         t_fill_start = t_drain_start - math.ceil(len(sram) / (init_bw * word_sz_bytes))
@@ -44,6 +51,12 @@ def dram_trace_read_dramsim(
                     cycles_needed = t_drain_start - t_fill_start
                     words_per_cycle = math.ceil(len(sram) / (cycles_needed * word_sz_bytes))
                     c = t_fill_start
+
+                    # if dram_traces file is empty, make the t_fill_start+1 as the offset
+                    if (os.stat(dram_trace_file).st_size == 0) and (t_fill_start != -1):
+                        offset = t_fill_start
+                        # input("Release offset= {}, press to continue".format(offset))
+
                     if verbose:
                         dram_traces.write('#t_fill_start={}, len(sram)={}\n'.format(t_fill_start, len(sram)))
                         print("Word per cycle = " + str(words_per_cycle))
@@ -51,8 +64,10 @@ def dram_trace_read_dramsim(
                         for _ in range(words_per_cycle):
                             if len(sram) > 0:
                                 p = sram.pop()
+
                                 # the dramsim format trace
-                                trace = "{} {} {}".format(hex(int(p)), "READ", int(c))
+                                # print('for loop, offset is {}, t_fill_start is {}'.format(offset, t_fill_start))
+                                trace = "{} {} {}".format(hex(int(p)), "READ", int(c-offset+1))
                                 trace += "\n"
                                 dram_traces.write(trace)
                         c += 1
@@ -67,6 +82,12 @@ def dram_trace_read_dramsim(
         cycles_needed = t_drain_start - t_fill_start
         words_per_cycle = math.ceil(len(sram) / (cycles_needed * word_sz_bytes))
         c = t_fill_start
+
+        # generate the filling trace from time t_fill_start to t_drain_start
+        # fixme either into if loop or for loop, this is a workaround now, figure out why and how better
+        if (os.stat(dram_trace_file).st_size == 0) and (t_fill_start != -1):
+            offset = t_fill_start
+
         if verbose:
             dram_traces.write('# len(sram)>0, t_fill_start={}, len(sram)={}\n'.format(t_fill_start, len(sram)))
         while len(sram) > 0:
@@ -75,7 +96,8 @@ def dram_trace_read_dramsim(
             for _ in range(words_per_cycle):
                 if len(sram) > 0:
                     p = sram.pop()
-                    trace = "{} {} {}".format(hex(int(p)), "READ", int(c))
+                    # print('if loop, offset is {}'.format(offset))
+                    trace = "{} {} {}".format(hex(int(p)), "READ", int(c-offset+1))
                     trace += "\n"
                     dram_traces.write(trace)
             c += 1
@@ -86,6 +108,7 @@ def dram_trace_read_dramsim(
 # write fn
 # fixme why there exists filling and draining sram buffer, but not for read dram fn?
 # seems like double buffer, one for fill, another drain, but is it? why not read_dram?
+# Write no min/max addr, coz only needs to write into ofmap, no ifmap/filter needed
 def dram_trace_write_dramsim(
         ofmap_sram_size=1 * 1024,  # word size
         data_width_bytes=1,
@@ -188,10 +211,15 @@ def dram_trace_write_dramsim(
 if __name__ == "__main__":
 
     # dram write 64 vs. 1024
-    dram_trace_write_dramsim(ofmap_sram_size=64,
-                             sram_write_trace_file='./outputs/test_dramsim_ws/test_sram_write.csv',
-                             dram_write_trace_file='./outputs/test_dramsim_ws/test_dram_write_64sram.csv',
-                             verbose=True)
+    # dram_trace_write_dramsim(ofmap_sram_size=64,
+    #                          sram_write_trace_file='./outputs/effgrad_16x16_ws_resnet18_good_nameFormat/sram/resnet18_sram_write_FC6.csv',
+    #                          dram_write_trace_file='./outputs/test_dram_write_output.csv',
+    #                          verbose=True)
 
-    # dram read 64 test, this test actually done at trace_gen_wrapper.py
-    # dram_trace_read_dramsim()
+    # test for filter dram read
+    dram_trace_read_dramsim(sram_sz=8192,
+                            word_sz_bytes=1,
+                            min_addr=1e6, max_addr=2e6,
+                            sram_trace_file='./outputs/effgrad_16x16_ws_resnet18_good_nameFormat/sram/resnet18_sram_read_Conv1.csv',
+                            dram_trace_file='./outputs/test_dram_read_output.csv',
+                            verbose=False)
