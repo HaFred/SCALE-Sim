@@ -213,7 +213,9 @@ def run_net_dramsim_format(ifmap_sram_size=1,
         filt_w = int(elems[4])
 
         num_channels = int(elems[5])
-        num_filters = int(elems[6])
+
+        # eval to enable the math parsing. eval will do evaluation for all the strings, unsafe if the input is untrusted
+        num_filters = int(eval(elems[6]))
 
         strides = int(elems[7])
 
