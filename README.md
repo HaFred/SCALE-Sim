@@ -11,7 +11,7 @@ specified accelerator configuration and neural network architecture.
 Run the customized SCALE Sim by
 ```python scale.py -arch_config=configs/effigrad.cfg -network=topologies/conv_nets/resnet18.csv -vanilla_scale_sim=False```
 
-The `SramSz` in `.cfg` and dram r/w function, is all in kilo word (assumed as byte/word if not addressed specifically). See run_nets.py.
+The `SramSz` in `.cfg` and dram r/w function, is all in word (assumed as byte/word if not addressed specifically). See run_nets.py if whether other definitions.
 
 ## Motivation
 

@@ -4,8 +4,25 @@ from dram_trace import prune
 import os
 '''
 Mod on Apr13:
-    Tyring to make the dram output trace with positive clock cycle, thus a temp_offset is needed for each trace file at
+    Trying to make the dram output trace with positive clock cycle, thus a temp_offset is needed for each trace file at
     very beginning. 
+    
+    on Apr19:
+    Micron DDR4 size ranging from .5GB to 2GB.
+    The convent_backward.csv makes every filter transposed. 
+    Nomenclature:
+    C: input channel
+    M: batch size
+    N: filter number / output channel
+    * FC6 needs to be extended into dram_word_bw wide, i.e., each data (word) needs to take **the whole bus** (8word).
+    * Conv layers, maybe, it needs rotated180[JSSC'20, Trainware]. In terms of dram, the **effect** of such rotate 
+    depends on the bus width. 2 access of each 8B-width now can accommodate one 3x3 filter kernel, whose weight element
+    is all 1B. 
+    It depends on the filter size and how filter channel stored in DRAM. If filter is 3x3, which is [1x9] vector 
+    after im2col, while filters in dram aligned as channel first fashion [C first]. To access conv rotated180 in
+    backward phase, need to access [N] in a row. Which is just like FC6 layer, making each filter element 8x access
+    exactly **dram_read_bw** in config file. 
+    
 '''
 # dramsim3 format dram_read_trace output fn
 def dram_trace_read_dramsim(
@@ -26,6 +43,9 @@ def dram_trace_read_dramsim(
     sram_requests = open(sram_trace_file, 'r')
     dram_traces = open(dram_trace_file, 'w')
     offset = 0
+
+    if os.stat(sram_trace_file).st_size == 0:
+        raise Exception("ABORT: sram_trace_file is empty")
 
     for entry in sram_requests:
         elems = entry.strip().split(',')
@@ -216,10 +236,19 @@ if __name__ == "__main__":
     #                          dram_write_trace_file='./outputs/test_dram_write_output.csv',
     #                          verbose=True)
 
-    # test for filter dram read
-    dram_trace_read_dramsim(sram_sz=8192,
+    # test for filter dram read, it proves that ws/os is definitely dram since sram trace is already different
+    dram_trace_read_dramsim(sram_sz=8192, # lets test the filter
                             word_sz_bytes=1,
-                            min_addr=1e6, max_addr=2e6,
-                            sram_trace_file='./outputs/effgrad_16x16_ws_resnet18_good_nameFormat/sram/resnet18_sram_read_Conv1.csv',
-                            dram_trace_file='./outputs/test_dram_read_output.csv',
+                            min_addr=1e7, max_addr=2e7, # filter base
+                            default_read_bw=8,
+                            sram_trace_file='./outputs/effgrad_16x16_ws_resnet18_forward/SRAM/resnet18_sram_read_CBa2a_1.csv',
+                            dram_trace_file='./outputs/apr15_ws.csv',
+                            verbose=False)
+
+    dram_trace_read_dramsim(sram_sz=8192,  # lets test the filter
+                            word_sz_bytes=1,
+                            min_addr=1e7, max_addr=2e7,# filter base
+                            default_read_bw=8,
+                            sram_trace_file='./outputs/effgrad_16x16_os_resnet18_forward/SRAM/resnet18_sram_read_CBa2a_1.csv',
+                            dram_trace_file='./outputs/apr15_os.csv',
                             verbose=False)

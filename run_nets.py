@@ -154,10 +154,10 @@ def run_net_dramsim_format(ifmap_sram_size=1,
                            dram_read_wsb=1,
                            dram_write_wsb=1
                            ):
-    # fixme this indicates the sram_size kB unit
-    ifmap_sram_size *= 1024
-    filter_sram_size *= 1024
-    ofmap_sram_size *= 1024
+    # # fixme this indicates the sram_size kB unit
+    # ifmap_sram_size *= 1024
+    # filter_sram_size *= 1024
+    # ofmap_sram_size *= 1024
 
     # fname = net_name + ".csv"
     param_file = open(topology_file, 'r')

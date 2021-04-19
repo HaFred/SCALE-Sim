@@ -203,7 +203,8 @@ def gen_all_traces_dramsim_format(
 
     print("Average utilization : \t" + str(util) + " %")
     print("Cycles for compute  : \t" + str(sram_cycles) + " cycles")
-    print("Fred [WARNING]: The bw numbers below are not guaranteed to be correct by parsing dramsim format dram traces")
+    print("Fred [WARNING]: The bw stats part are not taken care, yet to be correct by parsing dramsim format dram "
+          "traces")
     # bw_numbers, detailed_log = gen_bw_numbers(dram_ifmap_trace_file, dram_filter_trace_file,
     #                                           dram_ofmap_trace_file, sram_write_trace_file,
     #                                           sram_read_trace_file)

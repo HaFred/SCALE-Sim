@@ -166,16 +166,17 @@ class scale:
         cmd = "mv *.csv " + path
         os.system(cmd)
 
-        cmd = "mkdir " + path + "/sram"
+        cmd = "mkdir " + path + "/SRAM"
         os.system(cmd)
 
-        cmd = "mkdir " + path + "/dram"
+        cmd = "mkdir " + path + "/DRAM"
         os.system(cmd)
 
-        cmd = "mv " + path + "/*sram* " + path + "/sram"
+        # the uppercase is to avoid mv the folder itself and prompt errors
+        cmd = "mv " + path + "/*sram* " + path + "/SRAM"
         os.system(cmd)
 
-        cmd = "mv " + path + "/*dram* " + path + "/dram"
+        cmd = "mv " + path + "/*dram* " + path + "/DRAM"
         os.system(cmd)
 
         if self.save_space == True:
