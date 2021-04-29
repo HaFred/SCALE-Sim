@@ -9,15 +9,16 @@ import dramsim_format_convert_trace as dramsim_format
 
 
 def gen_all_traces(
-        array_h=4,
-        array_w=4,
+        # network topologies info
         ifmap_h=7, ifmap_w=7,
         filt_h=3, filt_w=3,
         num_channels=3,
         strides=1, num_filt=8,
 
+        # cfg config
+        array_h=4,
+        array_w=4,
         data_flow='os',
-
         word_size_bytes=1,
         filter_sram_size=64, ifmap_sram_size=64, ofmap_sram_size=64,
 

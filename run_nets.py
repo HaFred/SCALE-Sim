@@ -13,9 +13,10 @@ def run_net(ifmap_sram_size=1,
             net_name='yolo_v2',
             offset_list=[0, 10000000, 20000000]
             ):
-    ifmap_sram_size *= 1024
-    filter_sram_size *= 1024
-    ofmap_sram_size *= 1024
+    # # fixme uncomment this indicates the sram_size kB unit
+    # ifmap_sram_size *= 1024
+    # filter_sram_size *= 1024
+    # ofmap_sram_size *= 1024
 
     # fname = net_name + ".csv"
     param_file = open(topology_file, 'r')
@@ -102,11 +103,11 @@ def run_net(ifmap_sram_size=1,
                               filt_base=filter_base,
                               ifmap_base=ifmap_base,
                               ofmap_base=ofmap_base,
-                              sram_read_trace_file=net_name + "_" + name + "_sram_read.csv",
-                              sram_write_trace_file=net_name + "_" + name + "_sram_write.csv",
-                              dram_filter_trace_file=net_name + "_" + name + "_dram_filter_read.csv",
-                              dram_ifmap_trace_file=net_name + "_" + name + "_dram_ifmap_read.csv",
-                              dram_ofmap_trace_file=net_name + "_" + name + "_dram_ofmap_write.csv"
+                              sram_read_trace_file=net_name + "_sram_read_" + name + ".csv",
+                              sram_write_trace_file=net_name + "_sram_write_" + name + ".csv",
+                              dram_filter_trace_file=net_name + "_dram_filter_read_" + name + ".csv",
+                              dram_ifmap_trace_file=net_name + "_dram_ifmap_read_" + name + ".csv",
+                              dram_ofmap_trace_file=net_name + "_dram_ofmap_write_" + name + ".csv"
                               )
 
         bw_log += bw_str
@@ -116,11 +117,11 @@ def run_net(ifmap_sram_size=1,
         detail.write(detailed_log + "\n")
 
         max_bw_log += tg.gen_max_bw_numbers(
-            sram_read_trace_file=net_name + "_" + name + "_sram_read.csv",
-            sram_write_trace_file=net_name + "_" + name + "_sram_write.csv",
-            dram_filter_trace_file=net_name + "_" + name + "_dram_filter_read.csv",
-            dram_ifmap_trace_file=net_name + "_" + name + "_dram_ifmap_read.csv",
-            dram_ofmap_trace_file=net_name + "_" + name + "_dram_ofmap_write.csv"
+            sram_read_trace_file=net_name + "_sram_read_" + name + ".csv",
+            sram_write_trace_file=net_name + "_sram_write_" + name + ".csv",
+            dram_filter_trace_file=net_name + "_dram_filter_read_" + name + ".csv",
+            dram_ifmap_trace_file=net_name + "_dram_ifmap_read_" + name + ".csv",
+            dram_ofmap_trace_file=net_name + "_dram_ofmap_write_" + name + ".csv"
         )
 
         maxbw.write(max_bw_log + "\n")

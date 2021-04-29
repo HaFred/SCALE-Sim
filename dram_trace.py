@@ -38,6 +38,7 @@ def dram_trace_read_v2(
         elems = prune(elems)
         elems = [float(x) for x in elems]
 
+        # elems for each row
         clk = elems[0]
 
         for e in range(1, len(elems)):
@@ -45,7 +46,7 @@ def dram_trace_read_v2(
             if (elems[e] not in sram) and (elems[e] >= min_addr) and (elems[e] < max_addr):
 
                 # Used up all the unique data in the SRAM?
-                if len(sram) + word_sz_bytes > sram_sz:
+                if len(sram) * word_sz_bytes > sram_sz:
 
                     if t_fill_start == -1:
                         t_fill_start = t_drain_start - math.ceil(len(sram) / (init_bw * word_sz_bytes))
@@ -206,7 +207,9 @@ def dram_trace_write(ofmap_sram_size = 64,
     trace_file.close()
 
 if __name__ == "__main__":
-    dram_trace_read_v2(min_addr=0, max_addr=1000000, dram_trace_file="ifmaps_dram_read.csv")
-    dram_trace_read_v2(min_addr=1000000, max_addr=100000000, dram_trace_file="filter_dram_read.csv")
-        #dram_trace_read(filter_sram_sz=1024, ifmap_sram_sz=1024, sram_trace_file="sram_read.csv")
-        #dram_trace_write(ofmap_sram_size=1024,sram_write_trace_file="yolo_tiny_layer1_write.csv", dram_write_trace_file="yolo_tiny_layer1_dram_write.csv")
+    # dram_trace_read_v2(min_addr=0, max_addr=1000000, dram_trace_file="ifmaps_dram_read.csv")
+    # dram_trace_read_v2(min_addr=1000000, max_addr=100000000, dram_trace_file="filter_dram_read.csv")
+    dram_trace_read_v2(sram_sz=16384, min_addr=0, max_addr=1000000, dram_trace_file="ifmaps_dram_read.csv")
+
+    #dram_trace_read(filter_sram_sz=1024, ifmap_sram_sz=1024, sram_trace_file="sram_read.csv")
+    #dram_trace_write(ofmap_sram_size=1024,sram_write_trace_file="yolo_tiny_layer1_write.csv", dram_write_trace_file="yolo_tiny_layer1_dram_write.csv")
