@@ -72,7 +72,8 @@ def run_net(ifmap_sram_size=1,
         filt_w = int(elems[4])
 
         num_channels = int(elems[5])
-        num_filters = int(elems[6])
+        # to solve ValueError: invalid literal for int() with base 10
+        num_filters = int(eval(elems[6]))
 
         strides = int(elems[7])
 
@@ -215,6 +216,7 @@ def run_net_dramsim_format(ifmap_sram_size=1,
 
         num_channels = int(elems[5])
 
+        # to solve ValueError: invalid literal for int() with base 10
         # eval to enable the math parsing. eval will do evaluation for all the strings, unsafe if the input is untrusted
         num_filters = int(eval(elems[6]))
 

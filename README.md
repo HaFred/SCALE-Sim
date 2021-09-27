@@ -42,6 +42,7 @@ SCALE sim is capable of estimating the following:
 * Average utilization
 * On-chip memory requirements
 * Off-chip interface bandwidth requirements
+* SRAM traces (each line denote one cycle access)
 
 With the help of external simulators such as CACTI or DRAMPower, users can also use SCALE sim to obtain:
 
