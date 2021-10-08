@@ -143,8 +143,7 @@ def gen_all_traces_dramsim_format(
                 filt_h=filt_h, filt_w=filt_w,
                 num_channels=num_channels,
                 strides=strides, num_filt=num_filt,
-                filt_base=filt_base, ifmap_base=ifmap_base,
-                ofmap_base=ofmap_base,
+                filt_base=filt_base, ifmap_base=ifmap_base, ofmap_base=ofmap_base,
                 sram_read_trace_file=sram_read_trace_file,
                 sram_write_trace_file=sram_write_trace_file
             )

@@ -9,9 +9,11 @@ specified accelerator configuration and neural network architecture.
 ## Update on Apr12
 
 Run the customized SCALE Sim by
-```python scale.py -arch_config=configs/effigrad.cfg -network=topologies/conv_nets/resnet18.csv -vanilla_scale_sim=False```
+```python scale.py -arch_config=configs/effigrad.cfg -network=topologies/conv_nets/resnet18_vani_backward.csv -vanilla_scale_sim=False```
 
-The `SramSz` in `.cfg` and dram r/w function, is all in word (assumed as byte/word if not addressed specifically). See run_nets.py if whether other definitions.
+Then the output traces are dumped into source dir, the /outputs/xxx is moved/created manually, not by `scale.py`.
+
+The `SramSz` in `.cfg` and dram r/w function, is all in word (assumed as byte/word if not pointed out specifically). See run_nets.py if whether other definitions.
 
 ## Motivation
 

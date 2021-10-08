@@ -206,7 +206,8 @@ class scale:
 
                 self.run_once()
 
-    # this fn generates sram as used to, but dram traces are in dramsim3 format
+    # this fn generates sram as used to, but dram traces are in dramsim3 format,
+    # rather than the original scalesim format
     def test_dram_trace_resnet18(self):
         df_string = "Output Stationary"
         if self.dataflow == 'ws':
