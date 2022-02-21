@@ -260,6 +260,7 @@ def run_net_dramsim_format(ifmap_sram_size=1,
                                              dram_ofmap_trace_file=net_name + "_dram_ofmap_write_" + name + ".csv"
                                              )
 
+        # for the apr28 test, those detail.csv files are dumped by below, not commented
         # bw_log += bw_str
         # bw.write(bw_log + "\n")
         #
